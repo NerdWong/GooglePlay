@@ -3,7 +3,8 @@ package com.khalil.googlepaly.utils;
 import android.content.Context;
 import android.content.res.Resources;
 
-import com.itheima.googleplay.base.MyApplication;
+import com.khalil.googlepaly.base.MyApplication;
+
 
 /**
  * 创建者     伍碧林

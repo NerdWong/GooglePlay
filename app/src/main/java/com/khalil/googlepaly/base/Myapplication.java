@@ -14,7 +14,7 @@ import java.util.List;
  * Created by Khalil on 2017/7/8.
  */
 
-public class Myapplication extends Application {
+public class MyApplication extends Application {
 
     private static Context mContext;
     private static Handler mMainHandler;
