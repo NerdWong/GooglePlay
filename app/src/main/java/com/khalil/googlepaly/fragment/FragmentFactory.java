@@ -2,6 +2,9 @@ package com.khalil.googlepaly.fragment;
 
 import android.support.v4.app.Fragment;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @description 创建fragment的工厂类
  * Created by Khalil on 2017/7/9.
@@ -16,8 +19,15 @@ public class FragmentFactory {
     public static final int FRAGMENT_CATEGORY = 5;//分类
     public static final int FRAGMENT_HOT = 6;//排行
 
+    //创建缓存fragnents的list
+    public static Map<Integer, Fragment> mCacheFragments = new HashMap<>();
+
     public static Fragment createFragment(int position) {
-        Fragment fragment = new Fragment();
+        Fragment fragment = null;
+        if (mCacheFragments.get(position) != null) {
+            fragment = mCacheFragments.get(position);
+            return fragment;
+        }
         switch (position) {
             case FRAGMENT_HOME:
                 fragment = new Homefragment();
@@ -41,6 +51,7 @@ public class FragmentFactory {
                 fragment = new HotFragment();
                 break;
         }
+        mCacheFragments.put(position,fragment);
         return fragment;
     }
 }

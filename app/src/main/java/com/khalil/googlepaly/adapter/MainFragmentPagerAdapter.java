@@ -2,7 +2,7 @@ package com.khalil.googlepaly.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.khalil.googlepaly.R;
 import com.khalil.googlepaly.fragment.FragmentFactory;
@@ -13,7 +13,7 @@ import com.khalil.googlepaly.utils.UIUtils;
  * Created by Khalil on 2017/7/9.
  */
 
-public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
+public class MainFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     private final String[] mMainTitles;
 

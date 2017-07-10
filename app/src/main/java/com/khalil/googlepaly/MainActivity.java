@@ -1,15 +1,20 @@
 package com.khalil.googlepaly;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.ViewTreeObserver;
 
 import com.astuetz.PagerSlidingTabStripExtends;
 import com.khalil.googlepaly.adapter.MainFragmentPagerAdapter;
+import com.khalil.googlepaly.base.BaseFragment;
+import com.khalil.googlepaly.fragment.FragmentFactory;
 import com.khalil.googlepaly.utils.LogUtils;
 import com.khalil.googlepaly.utils.UIUtils;
 
@@ -27,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mToggle;
     private String[] mMainTitles;
     private MainFragmentPagerAdapter mMainFragmentPagerAdapter;
+    private MyOnPageChangeListener mMyOnPageChangeListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +43,30 @@ public class MainActivity extends AppCompatActivity {
         initActionBar();
         initActionBarDrawerToggle();
         initData();
+        initListener();
+    }
+
+    private void initListener() {
+        /**
+         * 1.tabs的选中监听
+         * 2.viewPager的加载完成监听
+         */
+        //1.初始化PagerSlidingTabstrip绑定的viewpager,其内部实现已经给viewpager设置了选中监听了,所以只需要给tab设置监听即可
+        mMyOnPageChangeListener = new MyOnPageChangeListener();
+        mMainTabs.setOnPageChangeListener(mMyOnPageChangeListener);
+        //2.viewpager的布局成功监听
+        mMainViewpager.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onGlobalLayout() {
+                //ViewPager已经展示给用户看-->说明HomeFragment和AppFragment已经创建好了
+                //手动选中第一页，触发加载数据的方法
+                mMyOnPageChangeListener.onPageSelected(0);
+                //remove这个布局监听
+                mMainTabs.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+
     }
 
     /**
@@ -91,5 +121,25 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            BaseFragment baseFragment = (BaseFragment) FragmentFactory.mCacheFragments.get(position);
+            //当页面被选中后再触发请求数据,而不是在创建的时候就请求数据
+            baseFragment.getLoadingPager().triggerLaodData();
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
     }
 }
