@@ -18,7 +18,7 @@ class AppFragment extends BaseFragment {
     @Override
     public LoadingPager.LoadingResult initData() {
         SystemClock.sleep(1000);
-        return LoadingPager.LoadingResult.SUCCESS;
+        return LoadingPager.LoadingResult.ERROR;
     }
 
     @Override

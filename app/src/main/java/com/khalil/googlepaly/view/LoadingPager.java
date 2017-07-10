@@ -3,6 +3,7 @@ package com.khalil.googlepaly.view;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.khalil.googlepaly.R;
@@ -30,6 +31,7 @@ public abstract class LoadingPager extends FrameLayout {
     private View mErrorView;
     private View mEmptyView;
     private View mSuccessView;
+    private LoadDataTask mLoadDataTask;
 
     //constructor
     public LoadingPager(@NonNull Context context) {
@@ -50,6 +52,15 @@ public abstract class LoadingPager extends FrameLayout {
         //错误视图
         mErrorView = View.inflate(UIUtils.getContext(), R.layout.pager_error, null);
         this.addView(mErrorView);
+        //------->>>>点击错误按钮,重新加载--------★★★
+        Button btnRetry = (Button) mErrorView.findViewById(R.id.error_btn_retry);
+        btnRetry.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //再次加载
+                triggerLaodData();
+            }
+        });
 
         //空视图
         mEmptyView = View.inflate(UIUtils.getContext(), R.layout.pager_empty, null);
@@ -122,7 +133,15 @@ public abstract class LoadingPager extends FrameLayout {
      */
     public void triggerLaodData() {
         //这个runable中包含了子类已经实现的initData()和initSuccessView()方法
-        new Thread(new LoadDataTask()).start();
+        // 若当前已经加载成功，则无需再次加载
+        if (mCurState != STATE_SUCCESS) {
+            // 控制数据加载之前显示加载中的视图
+            mCurState = STATE_LOADING;
+            refreshViewByState();
+            mLoadDataTask = new LoadDataTask();
+            new Thread(mLoadDataTask).start();
+        }
+
     }
 
     class LoadDataTask implements Runnable {
@@ -143,6 +162,9 @@ public abstract class LoadingPager extends FrameLayout {
                     refreshViewByState();
                 }
             });
+            //任务完成后,置空任务
+            mLoadDataTask = null;
+
 
         }
     }
