@@ -1,1 +1,1 @@
-include ':app', ':pagerslidingtabstript_lib'
+include ':app', ':pagerslidingtabstrip_lib'
