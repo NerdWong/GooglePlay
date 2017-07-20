@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 
 import com.khalil.googlepaly.view.LoadingPager;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by Khalil on 2017/7/10.
  */
@@ -44,4 +47,25 @@ public abstract class BaseFragment extends Fragment {
     public abstract LoadingPager.LoadingResult initData();
 
     public abstract View initSuccessView();
+    /**
+     * @des 校验请求回来的数据
+     */
+    public LoadingPager.LoadingResult checkResult(Object resObj) {
+        if (resObj == null) {
+            return LoadingPager.LoadingResult.EMPTY;
+        }
+        //resObj -->List
+        if (resObj instanceof List) {
+            if (((List) resObj).size() == 0) {
+                return LoadingPager.LoadingResult.EMPTY;
+            }
+        }
+        //resObj -->Map
+        if (resObj instanceof Map) {
+            if (((Map) resObj).size() == 0) {
+                return LoadingPager.LoadingResult.EMPTY;
+            }
+        }
+        return LoadingPager.LoadingResult.SUCCESS;
+    }
 }

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textSize="26sp"
-        android:text="test"
+        android:text="test : )"
         android:textColor="@color/tab_indicator_selected"
         android:textStyle="italic"
          />

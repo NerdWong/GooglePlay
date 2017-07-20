@@ -8,7 +8,9 @@ import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Process;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Khalil on 2017/7/8.
@@ -19,6 +21,15 @@ public class MyApplication extends Application {
     private static Context mContext;
     private static Handler mMainHandler;
     private static int mMainThreadId;
+    /**
+     * 内存缓存的集合
+     */
+    private Map<String, String> mMemProtocolCacheMap = new HashMap<>();
+
+    public Map<String, String> getMemProtocolCacheMap() {
+        return mMemProtocolCacheMap;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -28,7 +39,7 @@ public class MyApplication extends Application {
 
             //上下文
             mContext = getApplicationContext();
-            //在这里获得的thread和handler都是主线程的
+            //在这里创建的thread和handler都是主线程的
             //主线程handler
             mMainHandler = new Handler();
 

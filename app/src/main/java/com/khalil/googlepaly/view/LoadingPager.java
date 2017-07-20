@@ -8,6 +8,8 @@ import android.widget.FrameLayout;
 
 import com.khalil.googlepaly.R;
 import com.khalil.googlepaly.base.MyApplication;
+import com.khalil.googlepaly.factory.ThreadPoolProxyFactory;
+import com.khalil.googlepaly.utils.LogUtils;
 import com.khalil.googlepaly.utils.UIUtils;
 
 /**
@@ -135,13 +137,19 @@ public abstract class LoadingPager extends FrameLayout {
         //这个runable中包含了子类已经实现的initData()和initSuccessView()方法
         // 若当前已经加载成功，则无需再次加载
         if (mCurState != STATE_SUCCESS) {
-            // 控制数据加载之前显示加载中的视图
-            mCurState = STATE_LOADING;
-            refreshViewByState();
-            mLoadDataTask = new LoadDataTask();
-            new Thread(mLoadDataTask).start();
-        }
+            if (mLoadDataTask == null) {
+                LogUtils.s("###触发加载数据triggerLoadData");
+                //控制数据加载之前显示加载中的视图
+                mCurState = STATE_LOADING;
+                refreshViewByState();
 
+
+                //请求数据
+                mLoadDataTask = new LoadDataTask();
+                ThreadPoolProxyFactory.getNormalThreadPoolProxy().submit(mLoadDataTask);
+            }
+
+        }
     }
 
     class LoadDataTask implements Runnable {
